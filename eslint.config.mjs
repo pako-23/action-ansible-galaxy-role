@@ -1,18 +1,18 @@
 // See: https://eslint.org/docs/latest/use/configure/configuration-files
 
-import { FlatCompat } from '@eslint/eslintrc'
-import js from '@eslint/js'
-import typescriptEslint from '@typescript-eslint/eslint-plugin'
-import tsParser from '@typescript-eslint/parser'
-import jest from 'eslint-plugin-jest'
-import prettier from 'eslint-plugin-prettier'
-import globals from 'globals'
+import { FlatCompat } from '@eslint/eslintrc';
+import js from '@eslint/js';
+import typescriptEslint from '@typescript-eslint/eslint-plugin';
+import tsParser from '@typescript-eslint/parser';
+import jest from 'eslint-plugin-jest';
+import prettier from 'eslint-plugin-prettier';
+import globals from 'globals';
 
 const compat = new FlatCompat({
   baseDirectory: import.meta.dirname,
   recommendedConfig: js.configs.recommended,
   allConfig: js.configs.all
-})
+});
 
 export default [
   {
@@ -79,4 +79,4 @@ export default [
       'prettier/prettier': 'error'
     }
   }
-]
+];
