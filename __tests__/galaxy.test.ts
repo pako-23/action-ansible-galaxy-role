@@ -26,6 +26,19 @@ function statusResult(id: number | string, state: string) {
   return { results: [{ id, state }] };
 }
 
+async function checkRequestError(
+  token: string,
+  message: string,
+  after: number = 5_000
+) {
+  const promise: Promise<void> = publish(token);
+  const onError = promise.catch((e) => e);
+  await jest.advanceTimersByTimeAsync(after);
+  const error = await onError;
+  expect(error).toBeInstanceOf(Error);
+  expect((error as Error).message).toBe(message);
+}
+
 function expectPostCall(token: string, body: object) {
   expect(fetchMock).toHaveBeenNthCalledWith(
     1,
@@ -117,11 +130,11 @@ describe('galaxy.ts', () => {
       fetchMock.mockResolvedValueOnce(mockOk(statusResult(taskId, state)));
     }
 
-    const assertion: Promise<void> = expect(publish(token)).rejects.toThrow(
-      'failed to import role'
+    await checkRequestError(
+      token,
+      'failed to import role',
+      states.length * 5_000
     );
-    await jest.advanceTimersByTimeAsync(states.length * 5_000);
-    await assertion;
 
     expect(fetchMock).toHaveBeenCalledTimes(states.length + 1);
     expectPostCall(token, { user: owner, repo: repository });
@@ -182,11 +195,10 @@ describe('galaxy.ts', () => {
       .mockResolvedValueOnce(mockOk(createResult(taskId)))
       .mockResolvedValueOnce(mockOk({ results: [] }));
 
-    const assertion: Promise<void> = expect(publish(token)).rejects.toThrow(
+    await checkRequestError(
+      token,
       'the import response does not contain any results'
     );
-    await jest.advanceTimersByTimeAsync(5_000);
-    await assertion;
 
     expect(fetchMock).toHaveBeenCalledTimes(2);
     expectPostCall(token, { user: owner, repo: repository });
@@ -202,11 +214,10 @@ describe('galaxy.ts', () => {
         .mockResolvedValueOnce(mockOk(createResult(taskId)))
         .mockResolvedValueOnce(mockError(status));
 
-      const assertion: Promise<void> = expect(publish(token)).rejects.toThrow(
+      await checkRequestError(
+        token,
         `failed to get import task with status: ${status}`
       );
-      await jest.advanceTimersByTimeAsync(5_000);
-      await assertion;
 
       expect(fetchMock).toHaveBeenCalledTimes(2);
       expectPostCall(token, { user: owner, repo: repository });
