@@ -1,10 +1,10 @@
 # Ansible Galaxy Roles GitHub Action
 
-[Linter]
-[CI]
-[Check dist/]
-[CodeQL]
-[Coverage]
+![Linter](https://github.com/actions/typescript-action/actions/workflows/linter.yml/badge.svg)
+![CI](https://github.com/actions/typescript-action/actions/workflows/ci.yml/badge.svg)
+![Check dist/](https://github.com/actions/typescript-action/actions/workflows/check-dist.yml/badge.svg)
+![CodeQL](https://github.com/actions/typescript-action/actions/workflows/codeql-analysis.yml/badge.svg)
+![Coverage](./badges/coverage.svg)
 
 A GitHub Action to publish [Ansible] roles to [Ansible Galaxy].
 
@@ -12,7 +12,7 @@ A GitHub Action to publish [Ansible] roles to [Ansible Galaxy].
 
 | Input | Description | Default |
 |-------|-------------|:-------:|
-| `token` | The Ansible Galaxy API key which can be found at [https://galaxy.ansible.com/me/preferences](https://galaxy.ansible.com/me/preferences). | |
+| `token` | The Ansible Galaxy API key. | |
 
 ## Usage
 
@@ -34,7 +34,6 @@ steps:
       token: ${{ secrets.ANSIBLE_GALAXY_TOKEN }}
 ```
 
-
 ## License
 
 [MIT]
@@ -45,15 +44,5 @@ steps:
   https://galaxy.ansible.com/ui/
 [mit]:
   LICENSE
-[linter]:
-  https://github.com/actions/typescript-action/actions/workflows/linter.yml/badge.svg
-[ci]:
-  https://github.com/actions/typescript-action/actions/workflows/ci.yml/badge.svg
-[check dist/]:
-  https://github.com/actions/typescript-action/actions/workflows/check-dist.yml/badge.svg
-[codeql]:
-  https://github.com/actions/typescript-action/actions/workflows/codeql-analysis.yml/badge.svg
-[coverage]:
-  badges/coverage.svg
 [github variables]:
   https://docs.github.com/en/actions/reference/workflows-and-actions/variables
