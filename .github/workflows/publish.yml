@@ -29,12 +29,12 @@ jobs:
   publish:
     needs: [checks]
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v6
 
       - uses: softprops/action-gh-release@v3
+        permissions:
+          contents: write
         with:
           generate_release_notes: true
 
