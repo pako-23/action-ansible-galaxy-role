@@ -1,0 +1,47 @@
+---
+name: Publish Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Verify all required workflow runs passed
+        id: check
+        run: |
+          FAILED=$(gh run list \
+            --commit "${{ github.sha }}" \
+            --json conclusion \
+            --jq '[.[] | select(.conclusion == "failure")] | length')
+          if [ "$FAILED" -gt 0 ]; then
+            echo "Required workflow runs did not pass for this commit."
+            exit 1
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish:
+    needs: [checks]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: softprops/action-gh-release@v3
+        with:
+          generate_release_notes: true
+
+      - name: Update major version tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          MAJOR="$(echo '${{ github.ref_name }}' | cut -f1 -d '.')"
+          git tag -f "$MAJOR" '${{ github.ref_name }}'
+          git push origin --tags --force
