@@ -1,5 +1,6 @@
 # Ansible Galaxy Roles GitHub Action
 
+[![Latest Release](https://img.shields.io/github/v/release/pako-23/action-ansible-galaxy-role?sort=semver)](https://github.com/pako-23/action-ansible-galaxy-role/releases/latest)
 ![Linter](https://github.com/actions/typescript-action/actions/workflows/linter.yml/badge.svg)
 ![CI](https://github.com/actions/typescript-action/actions/workflows/ci.yml/badge.svg)
 ![Check dist/](https://github.com/actions/typescript-action/actions/workflows/check-dist.yml/badge.svg)
