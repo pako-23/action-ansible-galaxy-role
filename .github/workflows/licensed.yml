@@ -15,7 +15,6 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
 
 jobs:
   licensed:
@@ -55,24 +54,16 @@ jobs:
         id: update-licenses
         run: licensed cache
 
-      # Then, create a pull request with the updated licenses.
+      # Then, commit the updated licenses to the repository.
       - if: ${{ github.event_name == 'workflow_dispatch' }}
         name: Commit Licenses
         id: commit-licenses
         run: |
           git config --local user.email "licensed-ci@users.noreply.github.com"
           git config --local user.name "licensed-ci"
-          git checkout -b update-licenses-${{ github.run_id }}
           git add .
           git commit -m "Auto-update license files"
-          git push origin update-licenses-${{ github.run_id }}
-          gh pr create \
-            --base main \
-            --head update-licenses-${{ github.run_id }} \
-            --title "Auto-update license files" \
-            --body "Automated update of cached license files."
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          git push
 
       # Last, check the status of the cached licenses.
       - name: Check Licenses
