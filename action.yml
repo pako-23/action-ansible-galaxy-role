@@ -1,4 +1,3 @@
----
 name: Publish Role on Ansible Galaxy
 description: Publish an Ansible role on Ansible Galaxy
 author: pako-23 <pasqualepolverino98@gmail.com>
