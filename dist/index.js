@@ -28419,7 +28419,7 @@ async function publish(token) {
     const [owner, repository] = (process.env.GITHUB_ACTION_REPOSITORY ?? '').split('/');
     if (owner === undefined || repository === undefined)
         throw new Error('invalid value in GITHUB_ACTION_REPOSITORY');
-    debug(`creating import task with ower ${owner}`);
+    debug(`creating import task with owner ${owner}`);
     debug(`creating import task with repo  ${repository}`);
     const { id, github_user, github_repo } = await createImportTask(token, owner, repository);
     debug(`started import task with identifier ${id}`);

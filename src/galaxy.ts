@@ -96,7 +96,7 @@ export async function publish(token: string): Promise<void> {
   if (owner === undefined || repository === undefined)
     throw new Error('invalid value in GITHUB_ACTION_REPOSITORY');
 
-  core.debug(`creating import task with ower ${owner}`);
+  core.debug(`creating import task with owner ${owner}`);
   core.debug(`creating import task with repo  ${repository}`);
 
   const { id, github_user, github_repo } = await createImportTask(
