@@ -109,7 +109,7 @@ describe('galaxy.ts', () => {
       await promise;
 
       expect(fetchMock).toHaveBeenCalledTimes(states.length + 1);
-      expectPostCall(token, { user: owner, repo: repository });
+      expectPostCall(token, { github_user: owner, github_repo: repository });
 
       for (let i = 2; i <= states.length + 1; i++)
         expectGetCall(token, i, taskId);
@@ -137,7 +137,7 @@ describe('galaxy.ts', () => {
     );
 
     expect(fetchMock).toHaveBeenCalledTimes(states.length + 1);
-    expectPostCall(token, { user: owner, repo: repository });
+    expectPostCall(token, { github_user: owner, github_repo: repository });
 
     for (let i = 2; i <= states.length + 1; i++)
       expectGetCall(token, i, taskId);
@@ -171,7 +171,7 @@ describe('galaxy.ts', () => {
     );
 
     expect(fetchMock).toHaveBeenCalledTimes(1);
-    expectPostCall(token, { user: owner, repo: repository });
+    expectPostCall(token, { github_user: owner, github_repo: repository });
   });
 
   it.each([400, 401, 500])(
@@ -184,7 +184,7 @@ describe('galaxy.ts', () => {
       );
 
       expect(fetchMock).toHaveBeenCalledTimes(1);
-      expectPostCall(token, { user: owner, repo: repository });
+      expectPostCall(token, { github_user: owner, github_repo: repository });
     }
   );
 
@@ -201,7 +201,7 @@ describe('galaxy.ts', () => {
     );
 
     expect(fetchMock).toHaveBeenCalledTimes(2);
-    expectPostCall(token, { user: owner, repo: repository });
+    expectPostCall(token, { github_user: owner, github_repo: repository });
     expectGetCall(token, 2, taskId);
   });
 
@@ -220,7 +220,7 @@ describe('galaxy.ts', () => {
       );
 
       expect(fetchMock).toHaveBeenCalledTimes(2);
-      expectPostCall(token, { user: owner, repo: repository });
+      expectPostCall(token, { github_user: owner, github_repo: repository });
       expectGetCall(token, 2, taskId);
     }
   );

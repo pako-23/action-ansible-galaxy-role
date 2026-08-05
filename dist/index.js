@@ -28398,7 +28398,7 @@ async function createImportTask(token, user, repo) {
             'Content-Type': 'application/json',
             Authorization: `Token ${token}`
         },
-        body: JSON.stringify({ user, repo })
+        body: JSON.stringify({ github_user: user, github_repo: repo })
     });
     if (!response.ok)
         throw new Error(`import task creation failed with status: ${response.status}`);
@@ -28420,7 +28420,7 @@ async function publish(token) {
     if (owner === undefined || repository === undefined)
         throw new Error('invalid value in GITHUB_REPOSITORY');
     debug(`creating import task with owner ${owner}`);
-    debug(`creating import task with repo  ${repository}`);
+    debug(`creating import task with repo ${repository}`);
     const { id, github_user, github_repo } = await createImportTask(token, owner, repository);
     debug(`started import task with identifier ${id}`);
     debug(`import task GitHub user is ${github_user}`);

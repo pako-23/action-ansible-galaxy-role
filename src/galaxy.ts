@@ -49,7 +49,7 @@ async function createImportTask(
       'Content-Type': 'application/json',
       Authorization: `Token ${token}`
     },
-    body: JSON.stringify({ user, repo })
+    body: JSON.stringify({ github_user: user, github_repo: repo })
   });
 
   if (!response.ok)
@@ -95,7 +95,7 @@ export async function publish(token: string): Promise<void> {
     throw new Error('invalid value in GITHUB_REPOSITORY');
 
   core.debug(`creating import task with owner ${owner}`);
-  core.debug(`creating import task with repo  ${repository}`);
+  core.debug(`creating import task with repo ${repository}`);
 
   const { id, github_user, github_repo } = await createImportTask(
     token,
