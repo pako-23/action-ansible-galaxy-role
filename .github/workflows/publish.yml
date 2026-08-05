@@ -46,9 +46,14 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Check if distribution bundle exists
+        if: steps.find.outputs.run-id == 'none'
+        uses: actions/github-script@v9
+        with:
+          script: |
+            core.setFailed('Could not find uploaded distribution bundle');
+
       - name: Download dist artifact
-        if: steps.find.outputs.run-id != 'none'
-        continue-on-error: true
         uses: actions/download-artifact@v7
         with:
           name: dist
