@@ -35,32 +35,6 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Find check-dist run ID
-        id: find
-        run: |
-          RUN_ID="$(gh run list \
-            --workflow check-dist.yml \
-            --commit "${{ github.sha }}" \
-            --json databaseId --jq '.[0].databaseId')"
-          echo "run-id=${RUN_ID:-none}" >> "$GITHUB_OUTPUT"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Check if distribution bundle exists
-        if: steps.find.outputs.run-id == 'none'
-        uses: actions/github-script@v9
-        with:
-          script: |
-            core.setFailed('Could not find uploaded distribution bundle');
-
-      - name: Download dist artifact
-        uses: actions/download-artifact@v7
-        with:
-          name: dist
-          path: dist/
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          run-id: ${{ steps.find.outputs.run-id }}
-
       - uses: softprops/action-gh-release@v3
         with:
           generate_release_notes: true
