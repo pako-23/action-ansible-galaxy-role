@@ -28400,8 +28400,10 @@ async function createImportTask(token, user, repo) {
         },
         body: JSON.stringify({ user, repo })
     });
-    if (!response.ok)
-        throw new Error(`import task creation failed with status: ${response.status}, msg: ${response.text}`);
+    if (!response.ok) {
+        const message = await response.text();
+        throw new Error(`import task creation failed with status: ${response.status}, msg: ${message}`);
+    }
     const { results: [task] } = await unmarshalImportResponse(response);
     return task;
 }

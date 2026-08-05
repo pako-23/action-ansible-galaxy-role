@@ -14,8 +14,8 @@ function mockOk(body: unknown) {
   return { ok: true, text: async () => JSON.stringify(body) } as Response;
 }
 
-function mockError(status: number) {
-  return { ok: false, status } as Response;
+function mockError(status: number, message: string = '') {
+  return { ok: false, status, text: async () => message } as Response;
 }
 
 function createResult(id: number | string) {
@@ -174,13 +174,17 @@ describe('galaxy.ts', () => {
     expectPostCall(token, { user: owner, repo: repository });
   });
 
-  it.each([400, 401, 500])(
-    'throws when create request fails with %i',
-    async (status) => {
-      fetchMock.mockResolvedValueOnce(mockError(status));
+  it.each([
+    { status: 400, message: 'Invalid request' },
+    { status: 401, message: 'Invalid token' },
+    { status: 500, message: 'Invalid request' }
+  ])(
+    'throws when create request fails with {status: $status, message: $message}',
+    async ({ status, message }) => {
+      fetchMock.mockResolvedValueOnce(mockError(status, message));
 
       await expect(publish(token)).rejects.toThrow(
-        `import task creation failed with status: ${status}`
+        `import task creation failed with status: ${status}, msg: ${message}`
       );
 
       expect(fetchMock).toHaveBeenCalledTimes(1);

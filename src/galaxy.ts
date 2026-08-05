@@ -52,10 +52,12 @@ async function createImportTask(
     body: JSON.stringify({ user, repo })
   });
 
-  if (!response.ok)
+  if (!response.ok) {
+    const message: string = await response.text();
     throw new Error(
-      `import task creation failed with status: ${response.status}, msg: ${response.text}`
+      `import task creation failed with status: ${response.status}, msg: ${message}`
     );
+  }
 
   const {
     results: [task]
