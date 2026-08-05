@@ -54,7 +54,7 @@ async function createImportTask(
 
   if (!response.ok)
     throw new Error(
-      `import task creation failed with status: ${response.status}`
+      `import task creation failed with status: ${response.status}, msg: ${response.text}`
     );
 
   const {
@@ -95,6 +95,9 @@ export async function publish(token: string): Promise<void> {
 
   if (owner === undefined || repository === undefined)
     throw new Error('invalid value in GITHUB_ACTION_REPOSITORY');
+
+  core.debug(`creating import task with ower ${owner}`);
+  core.debug(`creating import task with repo  ${repository}`);
 
   const { id, github_user, github_repo } = await createImportTask(
     token,
