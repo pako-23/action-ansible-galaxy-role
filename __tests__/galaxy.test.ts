@@ -14,8 +14,8 @@ function mockOk(body: unknown) {
   return { ok: true, text: async () => JSON.stringify(body) } as Response;
 }
 
-function mockError(status: number, message: string = '') {
-  return { ok: false, status, text: async () => message } as Response;
+function mockError(status: number) {
+  return { ok: false, status } as Response;
 }
 
 function createResult(id: number | string) {
@@ -75,7 +75,7 @@ describe('galaxy.ts', () => {
   beforeEach(() => {
     process.env = {
       ...ENV,
-      GITHUB_ACTION_REPOSITORY: `${owner}/${repository}`
+      GITHUB_REPOSITORY: `${owner}/${repository}`
     };
 
     jest.useFakeTimers();
@@ -143,21 +143,21 @@ describe('galaxy.ts', () => {
       expectGetCall(token, i, taskId);
   });
 
-  it('throws when GITHUB_ACTION_REPOSITORY is not defined', async () => {
-    process.env.GITHUB_ACTION_REPOSITORY = undefined;
+  it('throws when GITHUB_REPOSITORY is not defined', async () => {
+    process.env.GITHUB_REPOSITORY = undefined;
 
     await expect(publish(token)).rejects.toThrow(
-      'invalid value in GITHUB_ACTION_REPOSITORY'
+      'invalid value in GITHUB_REPOSITORY'
     );
 
     expect(fetchMock).toHaveBeenCalledTimes(0);
   });
 
-  it('throws when GITHUB_ACTION_REPOSITORY is missing a slash', async () => {
-    process.env.GITHUB_ACTION_REPOSITORY = 'owner-name';
+  it('throws when GITHUB_REPOSITORY is missing a slash', async () => {
+    process.env.GITHUB_REPOSITORY = 'owner-name';
 
     await expect(publish(token)).rejects.toThrow(
-      'invalid value in GITHUB_ACTION_REPOSITORY'
+      'invalid value in GITHUB_REPOSITORY'
     );
 
     expect(fetchMock).toHaveBeenCalledTimes(0);
@@ -174,17 +174,13 @@ describe('galaxy.ts', () => {
     expectPostCall(token, { user: owner, repo: repository });
   });
 
-  it.each([
-    { status: 400, message: 'Invalid request' },
-    { status: 401, message: 'Invalid token' },
-    { status: 500, message: 'Invalid request' }
-  ])(
-    'throws when create request fails with {status: $status, message: $message}',
-    async ({ status, message }) => {
-      fetchMock.mockResolvedValueOnce(mockError(status, message));
+  it.each([400, 401, 500])(
+    'throws when create request fails with %i',
+    async (status) => {
+      fetchMock.mockResolvedValueOnce(mockError(status));
 
       await expect(publish(token)).rejects.toThrow(
-        `import task creation failed with status: ${status}, msg: ${message}`
+        `import task creation failed with status: ${status}`
       );
 
       expect(fetchMock).toHaveBeenCalledTimes(1);

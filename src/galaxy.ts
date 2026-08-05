@@ -52,12 +52,10 @@ async function createImportTask(
     body: JSON.stringify({ user, repo })
   });
 
-  if (!response.ok) {
-    const message: string = await response.text();
+  if (!response.ok)
     throw new Error(
-      `import task creation failed with status: ${response.status}, msg: ${message}`
+      `import task creation failed with status: ${response.status}`
     );
-  }
 
   const {
     results: [task]
@@ -91,12 +89,10 @@ async function getImportTaskStatus(
 }
 
 export async function publish(token: string): Promise<void> {
-  const [owner, repository] = (
-    process.env.GITHUB_ACTION_REPOSITORY ?? ''
-  ).split('/');
+  const [owner, repository] = (process.env.GITHUB_REPOSITORY ?? '').split('/');
 
   if (owner === undefined || repository === undefined)
-    throw new Error('invalid value in GITHUB_ACTION_REPOSITORY');
+    throw new Error('invalid value in GITHUB_REPOSITORY');
 
   core.debug(`creating import task with owner ${owner}`);
   core.debug(`creating import task with repo  ${repository}`);
