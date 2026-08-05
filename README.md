@@ -23,6 +23,15 @@ particular, it will detect the repository owner and name from the default
 [GitHub variables].
 
 ```yaml
+name: Publish Ansible Role
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
 steps:
   - name: Checkout
     id: checkout
